@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Proveedores{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-3">Lista de Proveedores</h1>
+  <div class="row">
+    {% for proveedor in proveedores %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          {% if proveedor.imagen %}
+            <img src="{{ proveedor.imagen.url }}" class="card-img-top" alt="Foto de {{ proveedor.nombre }}" style="height:300px; object-fit:cover;">
+          {% else %}
+            <svg class="bd-placeholder-img card-img-top" width="100%" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sin foto">
+              <rect width="100%" height="100%" fill="#e9ecef"></rect>
+            </svg>
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ proveedor.nombre }}</h5>
+            <p class="card-text"><strong>Email:</strong> {{ proveedor.correo }}</p>
+            <p class="card-text"><strong>Teléfono:</strong> {{ proveedor.telefono|default:"—" }}</p>
+            <p class="card-text"><strong>Dirección:</strong> {{ proveedor.direccion|default:"—" }}</p>
+            <a href="{% url 'rescateComida:proveedor_perfil' proveedor.id %}" class="btn btn-outline-primary mt-auto">
+              <i class="bi bi-eye"></i> Ver perfil
+            </a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info text-center">
+          <i class="bi bi-info-circle"></i> No hay proveedores disponibles.
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Producto - Proveedor{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ action }} Producto</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">{{ action }}</button>
+    <a href="{% url 'rescateComida:dashboard_proveedor' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

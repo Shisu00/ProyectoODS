@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Dashboard - Proveedor{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-clipboard-data"></i> Mi Dashboard</h2>
+                <div>
+                    <a href="{% url 'rescateComida:producto_crear' %}" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Publicar Producto
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h3>{{ productos.count }}</h3>
+                    <p class="mb-0">Productos Totales</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h3>{{ productos|length }}</h3>
+                    <p class="mb-0">Productos Activos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h3>0</h3>
+                    <p class="mb-0">Ventas del Mes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <h3>CO2</h3>
+                    <p class="mb-0">Impacto Ambiental</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h4>Mis Productos</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for producto in productos %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card">
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ producto.nombre }}</h5>
+                        <p class="card-text">{{ producto.descripcion|truncatewords:10 }}</p>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="bi bi-box"></i> {{ producto.cantidad }} {{ producto.get_unidad_medida_display }}
+                            </small>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar"></i> Vence: {{ producto.fecha_vencimiento|default:"No especificado" }}
+                            </small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {% if producto.estado == 'disponible' %}
+                                <span class="badge bg-success">Disponible</span>
+                            {% elif producto.estado == 'reservado' %}
+                                <span class="badge bg-warning">Reservado</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No Disponible</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="btn-group w-100" role="group">
+                            <a href="{% url 'rescateComida:producto_editar' producto.id_producto %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            <a href="{% url 'rescateComida:producto_eliminar' producto.id_producto %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> No tienes productos publicados aún.
+                    <br><br>
+                    <a href="{% url 'rescateComida:producto_crear' %}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Publicar tu Primer Producto
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

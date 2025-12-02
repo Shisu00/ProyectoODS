@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil - Proveedor{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="bi bi-shop"></i> Mi Perfil de Proveedor</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">{{ usuario.nombre }}</h6>
+                    <p class="card-text">
+                        <i class="bi bi-envelope"></i> {{ usuario.correo }}<br>
+                        {% if usuario.telefono %}
+                            <i class="bi bi-telephone"></i> {{ usuario.telefono }}<br>
+                        {% endif %}
+                        {% if usuario.direccion %}
+                            <i class="bi bi-geo-alt"></i> {{ usuario.direccion }}<br>
+                        {% endif %}
+                        {% if usuario.comuna %}
+                            <i class="bi bi-map"></i> {{ usuario.comuna }}<br>
+                        {% endif %}
+                        <i class="bi bi-calendar"></i> Proveedor desde {{ usuario.date_joined|date:"M Y" }}
+
+                    </p>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                            <i class="bi bi-pencil"></i> Editar Perfil
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5><i class="bi bi-award"></i> Tu Impacto Positivo</h5>
+                </div>
+                <div class="card-body text-center">
+                    {% with transacciones_count=transacciones.count %}
+                        <h3 class="text-warning">{{ transacciones_count|floatformat:1 }} kg</h3>
+                    {% endwith %}
+                    <p class="text-muted">CO₂ evitado con tus transacciones</p>
+                    <div class="progress mb-2">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 75%"></div>
+                    </div>
+                    <small class="text-muted">¡Gracias por contribuir al ODS 12!</small>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="bi bi-star-fill"></i> Reputación</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-2">
+                        <span class="text-warning">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star"></i>
+                        </span>
+                    </div>
+                    <h5>4/5</h5>
+                    <p class="text-muted small">Basado en valoraciones</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white text-center">
+                        <div class="card-body">
+                            <h4>{{ ventas.count }}</h4>
+                            <p class="mb-0 small">Transacciones</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white text-center">
+                        <div class="card-body">
+                            {% with productos_count=usuario.productos.count %}
+                                <h4>{{ productos_count }}</h4>
+                            {% endwith %}
+                            <p class="mb-0 small">Productos Publicados</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white text-center">
+                        <div class="card-body">
+                            <h4>{{ productos_activos|default:0 }}</h4>
+                            
+                            <p class="mb-0 small">Productos Activos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-dark text-center">
+                        <div class="card-body">
+                            {% with donaciones=transacciones|length %}
+                                <h4>{{ donaciones }}</h4>
+                            {% endwith %}
+                            <p class="mb-0 small">Donaciones/Ventas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="bi bi-graph-up"></i> Historial de Transacciones</h5>
+                </div>
+                <div class="card-body">
+                    {% if transacciones %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Producto</th>
+                                        <th>Cliente</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transaccion in transacciones %}
+                                        <tr>
+                                            <td>{{ transaccion.fecha_solicitud|date:"d/m/Y" }}</td>
+                                            <td>
+                                                <strong>{{ transaccion.id_producto.nombre }}</strong><br>
+                                                <small class="text-muted">{{ transaccion.id_producto.cantidad }} {{ transaccion.id_producto.get_unidad_medida_display }}</small>
+                                            </td>
+                                            <td>
+                                                {{ transaccion.id_cliente.nombre }}<br>
+                                                <small class="text-muted">{{ transaccion.id_cliente.correo }}</small>
+                                            </td>
+                                            <td>
+                                                {% if transaccion.tipo == 'venta' %}
+                                                    <span class="badge bg-primary">Venta</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">Donación</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if transaccion.estado == 'pendiente' %}
+                                                    <span class="badge bg-warning">Pendiente</span>
+                                                {% elif transaccion.estado == 'completada' %}
+                                                    <span class="badge bg-success">Completada</span>
+                                                {% elif transaccion.estado == 'entregada' %}
+                                                    <span class="badge bg-info">Entregada</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Cancelada</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center">
+                            <i class="bi bi-graph-up text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">No tienes transacciones registradas aún.</p>
+                            <a href="{% url 'rescateComida:dashboard_proveedor' %}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Publicar Productos
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="bi bi-box-seam"></i> Productos Recientes</h5>
+                </div>
+                <div class="card-body">
+                    {% if usuario.productos.all %}
+                        <div class="row">
+                            {% for producto in usuario.productos.all|slice:":3" %}
+                                <div class="col-md-4 mb-3">
+                                    <div class="card border-success">
+                                        {% if producto.imagen %}
+                                            <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 150px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-body p-2">
+                                            <h6 class="card-title">{{ producto.nombre }}</h6>
+                                            <small class="text-muted">
+                                                {% if producto.estado == 'disponible' %}
+                                                    <span class="badge bg-success">Disponible</span>
+                                                {% elif producto.estado == 'reservado' %}
+                                                    <span class="badge bg-warning">Reservado</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">{{ producto.get_estado_display }}</span>
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center">Aún no tienes productos publicados.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editarPerfilModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-pencil"></i> Editar Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editarPerfilForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" value="{{ usuario.nombre }}" name="nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" value="{{ usuario.telefono|default:'' }}" name="telefono">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        <input type="text" class="form-control" value="{{ usuario.direccion|default:'' }}" name="direccion">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comuna</label>
+                        <input type="text" class="form-control" value="{{ usuario.comuna|default:'' }}" name="comuna">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

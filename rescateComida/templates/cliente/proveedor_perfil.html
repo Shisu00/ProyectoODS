@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil de {{ proveedor.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-4">
+      {% if proveedor.telefono %}
+        <p><i class="bi bi-telephone"></i> {{ proveedor.telefono }}</p>
+      {% endif %}
+      {% if proveedor.direccion %}
+        <p><i class="bi bi-geo-alt"></i> {{ proveedor.direccion }}</p>
+      {% endif %}
+      <p><i class="bi bi-envelope"></i> {{ proveedor.correo }}</p>
+      <p><i class="bi bi-calendar"></i> Miembro desde {{ proveedor.date_joined|date:"M Y" }}</p>
+    </div>
+    <div class="col-md-8">
+        <h3>Productos de {{proveedor.username }}</h3>
+      <div class="row">
+        {% for producto in productos %}
+          <div class="col-md-6 mb-4">
+            <div class="card h-100">
+              {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height:200px;object-fit:cover;">
+              {% endif %}
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ producto.nombre }}</h5>
+                <p class="card-text">{{ producto.descripcion|truncatewords:15 }}</p>
+                <small class="text-muted">
+                  <i class="bi bi-box"></i> {{ producto.cantidad }} {{ producto.get_unidad_medida_display }}
+                </small>
+                <a href="{% url 'rescateComida:producto_detalle' producto.id_producto %}" class="btn btn-primary mt-auto">Ver detalle</a>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <p>No hay productos disponibles de este proveedor.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

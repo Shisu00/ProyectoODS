@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Desperdicio Zero{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold">¡Bienvenido a Desperdicio Zero!</h1>
+                <p class="lead">Conectamos proveedores con clientes para reducir el desperdicio de comida y contribuir al ODS 12: Producción y Consumo Responsable :D</p>
+                <div class="mt-4">
+                    {% if not request.session.user_id %}
+                        <a href="{% url 'rescateComida:registro' %}" class="btn btn-light btn-lg me-3">
+                            <i class="bi bi-person-plus"></i> Registrarse
+                        </a>
+                        <a href="{% url 'rescateComida:login' %}" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                        </a>
+                    {% else %}
+                        {% if request.session.user_tipo == 'cliente' %}
+                            <a href="{% url 'rescateComida:dashboard_cliente' %}" class="btn btn-light btn-lg">
+                                <i class="bi bi-shop"></i> Ver Productos Disponibles
+                            </a>
+                        {% elif request.session.user_tipo == 'proveedor' %}
+                            <a href="{% url 'rescateComida:dashboard_proveedor' %}" class="btn btn-light btn-lg">
+                                <i class="bi bi-clipboard-data"></i> Mi Dashboard
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="132" height="132" fill="currentColor" class="bi bi-recycle" viewBox="0 0 16 16">
+                        <path d="M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.5.5 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="mb-4">¿Cómo Funciona?</h2>
+            <p class="text-muted">Cada día las tiendas afiliadas publican el stock disponible de los productos que, por distintos motivos, no lograron vender. Tú puedes rescatar estos productos a precios reducidos.
+            </p>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4 text-center mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-shop text-success display-4 mb-3"></i>
+                    <h4>Proveedores</h4>
+                    <p class="text-muted">Los restaurantes, tiendas y vendedores pueden publicar productos próximos a vencer o que no pudo ser vendida durante el día.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-people text-primary display-4 mb-3"></i>
+                    <h4>Clientes</h4>
+                    <p class="text-muted">Los usuarios pueden comprar productos a precios reducidos o las organizaciones benéficas pueden retirarlos sin costo.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-globe text-warning display-4 mb-3"></i>
+                    <h4>Impacto</h4>
+                    <p class="text-muted">Juntos contribuimos a reducir el desperdicio de alimentos y el impacto ambiental.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h3>Objetivo de Desarrollo Sostenible 12</h3>
+                <p class="text-muted">
+                    <strong>Producción y Consumo Responsables</strong><br>
+                    Garantizar modalidades de consumo y producción sostenibles es esencial para reducir la huella ecológica futura. 
+                    Nuestra plataforma contribuye directamente a reducir el desperdicio de alimentos y promover prácticas sostenibles.
+                </p>
+                <div class="mt-3">
+                    <span class="badge bg-success me-2">Zero Desperdicio</span>
+                    <span class="badge bg-primary me-2">Consumo Responsable</span>
+                    <span class="badge bg-warning">Impacto Social</span>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="p-4">
+                    <i class="bi bi-award text-success" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3 text-success">ODS 12</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

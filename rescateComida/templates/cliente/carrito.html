@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Carrito{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-cart"></i> Mi Carrito ({{ carrito_items }} items)</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if productos %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Productos en carrito</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in productos %}
+                    <div class="row mb-3 p-3 border-bottom">
+                        <div class="col-md-2">
+                            {% if item.producto.imagen %}
+                                <img src="{{ item.producto.imagen.url }}" class="img-fluid rounded" alt="{{ item.producto.nombre }}">
+                            {% else %}
+                                <div class="bg-light p-3 text-center rounded">Sin imagen</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div>
+                                <h6>{{ item.producto.nombre }}</h6>
+                                <p class="text-muted mb-1">{{ item.producto.descripcion|truncatewords:10 }}</p>
+                                <small class="text-success">Proveedor: {{ item.producto.id_usuario.first_name }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center justify-content-end">
+                            <span class="h5">{{ item.subtotal }} {{ item.producto.unidad_medida }}</span>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <span class="badge bg-info">{{ item.cantidad }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header">
+                    <h5>Resumen de compra</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Total productos:</span>
+                        <span>{{ carrito_items }} items</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between h5 mb-4">
+                        <span><strong>Total:</strong></span>
+                        <span><strong>{{ total }} unidades</strong></span>
+                    </div>
+                    <a href="{% url 'rescateComida:finalizar_compra' %}" 
+                       class="btn btn-success btn-lg w-100 mb-2">
+                        <i class="bi bi-check-circle"></i> Finalizar Compra
+                    </a>
+                    <a href="{% url 'rescateComida:dashboard_cliente' %}" 
+                       class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-arrow-left"></i> Continuar Comprando
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-cart-x display-1 text-muted mb-4"></i>
+        <h4>Tu carrito está vacío</h4>
+        <a href="{% url 'rescateComida:dashboard_cliente' %}" class="btn btn-primary">
+            Ver productos disponibles
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
