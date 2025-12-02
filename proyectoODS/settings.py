@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-tr7-nt#6z&fy@9i1xcoaaqvyrm%&&j8!#wf==yr&5trmpteuqt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'desperdiciozero.onrender.com',
+]
 
 
 # Application definition
@@ -126,8 +128,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS  =[os.path.join(BASE_DIR, 'static')]
+#STATIC_URL = 'static/'
+#STATICFILES_DIRS  =[os.path.join(BASE_DIR, 'static')]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
