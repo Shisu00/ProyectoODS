@@ -29,9 +29,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'desperdiciozero.onrender.com',
+    'proyectoods-4.onrender.com',
+    'localhost',
+    '127.0.0.1',
 ]
-
 
 # Application definition
 
@@ -93,7 +94,7 @@ DATABASES = {
 }
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
